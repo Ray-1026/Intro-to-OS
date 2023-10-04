@@ -1,6 +1,6 @@
 # Intro-to-OS
 
-Instructor : 
+Instructor : 張立平
 
 Semester : 2023 Fall
 
