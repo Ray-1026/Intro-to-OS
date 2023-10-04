@@ -98,10 +98,7 @@ void execute(pid_t &pid, char *input, bool &wait_child)
     }
     else if (pid > 0) {
         // parent
-        if (wait_child)
-            wait(NULL);
-        else
-            waitpid(-1, NULL, WNOHANG);
+        (wait_child) ? (wait(NULL)) : (waitpid(-1, NULL, WNOHANG));
     }
     else {
         fprintf(stderr, "Fork Failed");
@@ -116,13 +113,14 @@ int main()
 
     signal(SIGCHLD, sigchld_handler); // handle zombie processes with SIGCHLD
 
-    cout << ">";
-    while (cin.getline(input, BUFFER)) {
+    printf(">");
+    while (fgets(input, BUFFER, stdin)) {
+        input[strlen(input) - 1] = '\0';
         if (strcmp(input, "exit") == 0)
             break;
 
         bool wait_child = true;
         execute(pid, input, wait_child);
-        cout << ">";
+        printf(">");
     }
 }
