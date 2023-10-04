@@ -10,6 +10,7 @@ Semester : 2023 Fall
 ## Assignment 1 - Simple Shell
 ```bash
 sudo apt install g++
+cd Assignment1
 g++ 110550093_P1.cpp
 ./a.out
 ```
