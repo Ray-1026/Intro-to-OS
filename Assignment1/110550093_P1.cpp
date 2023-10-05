@@ -76,25 +76,70 @@ void execute(pid_t &pid, char *input, bool &wait_child)
     if (pid == 0) {
         // child
         switch (cmd_status) {
-        case Pipe:
+        case Pipe: {
+            int pipefd[2];
+            if (pipe(pipefd) == -1) {
+                perror("Pipe failed");
+                exit(1);
+            }
+
+            pid_t pid_temp = fork();
+            if (pid_temp == 0) {
+                dup2(pipefd[1], STDOUT_FILENO);
+                close(pipefd[0]);
+                close(pipefd[1]);
+
+                execvp(left_cmd[0], left_cmd);
+                exit(1);
+            }
+            else if (pid_temp < 0) {
+                fprintf(stderr, "Fork Failed");
+                exit(-1);
+            }
+
+            pid_temp = fork();
+            if (pid_temp == 0) {
+                dup2(pipefd[0], STDIN_FILENO);
+                close(pipefd[1]);
+                close(pipefd[0]);
+
+                execvp(right_cmd[0], right_cmd);
+                exit(1);
+            }
+            else if (pid_temp < 0) {
+                fprintf(stderr, "Fork Failed");
+                exit(-1);
+            }
+
+            close(pipefd[0]);
+            close(pipefd[1]);
+            wait(NULL);
+            wait(NULL);
             break;
+        }
         case Redirect_to: {
             int fd = open(right_cmd[0], O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
             dup2(fd, STDOUT_FILENO);
             close(fd);
+
+            execvp(left_cmd[0], left_cmd);
+            exit(1);
             break;
         }
         case Redirect_from: {
             int fd = open(right_cmd[0], O_RDONLY, S_IRUSR | S_IWUSR);
             dup2(fd, STDIN_FILENO);
             close(fd);
+
+            execvp(left_cmd[0], left_cmd);
+            exit(1);
             break;
         }
         default:
+            execvp(left_cmd[0], left_cmd);
+            exit(1);
             break;
         }
-        execvp(left_cmd[0], left_cmd);
-        exit(1);
     }
     else if (pid > 0) {
         // parent
