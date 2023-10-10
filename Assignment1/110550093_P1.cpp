@@ -161,7 +161,7 @@ int main()
     printf(">");
     while (fgets(input, BUFFER, stdin)) {
         input[strlen(input) - 1] = '\0';
-        if (strcmp(input, "exit") == 0)
+        if (!strcmp(input, "exit") || !strcmp(input, "exit &"))
             break;
 
         bool wait_child = true;
