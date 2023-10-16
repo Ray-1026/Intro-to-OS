@@ -25,7 +25,7 @@ int main()
     cout << "\n";
 
     // shared memory
-    int shmid = shmget(IPC_PRIVATE, sizeof(unsigned int) * size * size, IPC_CREAT | 0666);
+    int shmid = shmget(IPC_PRIVATE, sizeof(unsigned int) * size * size, IPC_CREAT | 0600);
     int *C = (int *)(shmat(shmid, NULL, 0));
 
     // different amount of processes
