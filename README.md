@@ -1,16 +1,16 @@
 # Intro-to-OS
 
-Instructor : 張立平
+Instructor : Prof. Li-Pin Chang
 
 Semester : 2023 Fall
 
 ## Environment
 `Ubuntu 18.04`
 
-## Assignment 1 - Simple Shell
-```bash
-sudo apt install g++
-cd Assignment1
-g++ 110550093_P1.cpp
-./a.out
-```
+## Assignments
+
+|               | Topic                                                   |
+|:-------------:|:-------------------------------------------------------:|
+| Assignments 1 | Simple shell                                            |
+| Assignments 2 | Multi-Process Matrix Multiplication using Shared Memory |
+| Assignments 3 | Parallel Merge Sort with Threads                        |
