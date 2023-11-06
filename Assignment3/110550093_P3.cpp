@@ -148,7 +148,7 @@ int main()
 
         gettimeofday(&stop, 0);
         int sec = stop.tv_sec - start.tv_sec, usec = stop.tv_usec - start.tv_usec;
-        cout << "worker thread #" << thread << ", elapsed " << (sec + (usec / 1000000.0)) * 1000 << " ms\n";
+        printf("worker thread #%d, elapsed %.6f ms\n", thread, (sec + (usec / 1000000.0)) * 1000.0);
 
         pool->destroy();
     }
