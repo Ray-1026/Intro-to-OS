@@ -31,4 +31,6 @@
 *.out
 *.app
 
-*.txt
+Assignment1/*.txt
+Assignment2/*.txt
+Assignment3/*.txt
