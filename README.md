@@ -9,8 +9,9 @@ Semester : 2023 Fall
 
 ## Assignments
 
-|               | Topic                                                   |
-|:-------------:|:-------------------------------------------------------:|
-| Assignments 1 | Simple shell                                            |
-| Assignments 2 | Multi-Process Matrix Multiplication using Shared Memory |
-| Assignments 3 | Parallel Merge Sort with Threads                        |
+|              | Topic                                                   |
+|:------------:|:-------------------------------------------------------:|
+| Assignment 1 | Simple shell                                            |
+| Assignment 2 | Multi-Process Matrix Multiplication using Shared Memory |
+| Assignment 3 | Parallel Merge Sort with Threads                        |
+| Assignment 4 | malloc() Replacement                                    |
