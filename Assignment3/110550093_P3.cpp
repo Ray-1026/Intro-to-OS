@@ -106,7 +106,7 @@ class ThreadPool {
         sem_init(&mutex, 0, 1);
         sem_init(&finish, 0, 0);
 
-        threads = new pthread_t[n];
+        threads = new pthread_t[thread_num];
 
         for (int job = 8; job < 16; job++)
             work_queue.push(job);
