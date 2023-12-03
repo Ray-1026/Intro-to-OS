@@ -15,3 +15,4 @@ Semester : 2023 Fall
 | Assignment 2 | Multi-Process Matrix Multiplication using Shared Memory |
 | Assignment 3 | Parallel Merge Sort with Threads                        |
 | Assignment 4 | malloc() Replacement                                    |
+| Assignment 5 | Page Replacement Simulation : LRU and LFU               |
