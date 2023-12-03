@@ -33,13 +33,14 @@ class PageReplacementAlgo {
             page_refs.push_back(num);
         fin.close();
     }
-    void printLog() { printf("%d\t%d\t\t%d\t\t%.10f\n", total_frame, hit, miss, (float)miss / (hit + miss)); }
+    void printLog() { printf("%d\t%d\t\t%d\t\t%.10f\n", total_frame, hit, miss, (double)miss / (hit + miss)); }
 };
 
-//     __   ______  __
-//    / /  / __/ / / /
-//   / /__/ _// /_/ /
-//  /____/_/  \____/
+//      __    ________  __
+//     / /   / ____/ / / /
+//    / /   / /_  / / / /
+//   / /___/ __/ / /_/ /
+//  /_____/_/    \____/
 //
 
 class LFU : public PageReplacementAlgo {
@@ -66,7 +67,14 @@ class LFU : public PageReplacementAlgo {
     FreqNode *head, *tail;
     list<Node *> hash_table[HASH_SIZE];
 
-    void removeEmptyNode(FreqNode *cur)
+    void insertNode(FreqNode *cur, Node *new_node)
+    {
+        new_node->prev = cur->nodes_head;
+        new_node->next = cur->nodes_head->next;
+        cur->nodes_head->next->prev = new_node;
+        cur->nodes_head->next = new_node;
+    }
+    void removeEmptyFreqNode(FreqNode *cur)
     {
         if (cur != head && cur->nodes_head->next == cur->nodes_tail) {
             cur->prev->next = cur->next;
@@ -92,13 +100,8 @@ class LFU : public PageReplacementAlgo {
                     next_freq = new_freq;
                 }
                 i->freq_node = next_freq;
-
-                i->prev = next_freq->nodes_head;
-                i->next = next_freq->nodes_head->next;
-                next_freq->nodes_head->next->prev = i;
-                next_freq->nodes_head->next = i;
-
-                removeEmptyNode(i->freq_node->prev);
+                insertNode(next_freq, i);
+                removeEmptyFreqNode(i->freq_node->prev);
                 return 1;
             }
         }
@@ -119,25 +122,22 @@ class LFU : public PageReplacementAlgo {
             least_freq = freq_1;
         }
         new_node->freq_node = least_freq;
-
-        new_node->prev = least_freq->nodes_head;
-        new_node->next = least_freq->nodes_head->next;
-        least_freq->nodes_head->next->prev = new_node;
-        least_freq->nodes_head->next = new_node;
+        insertNode(least_freq, new_node);
 
         hash_table[hash_idx].push_back(new_node);
     }
     void evict()
     {
+        --cur_frame;
         FreqNode *least_freq = head->next;
         Node *del_node = least_freq->nodes_tail->prev;
         del_node->prev->next = del_node->next;
         del_node->next->prev = del_node->prev;
+
         hash_table[hash_func(del_node->val)].remove(del_node);
         delete del_node;
-        --cur_frame;
 
-        removeEmptyNode(least_freq);
+        removeEmptyFreqNode(least_freq);
     }
 
   public:
@@ -156,10 +156,11 @@ class LFU : public PageReplacementAlgo {
     }
 };
 
-//     __   ___  __  __
-//    / /  / _ \/ / / /
-//   / /__/ , _/ /_/ /
-//  /____/_/|_|\____/
+//      __    ____  __  __
+//     / /   / __ \/ / / /
+//    / /   / /_/ / / / /
+//   / /___/ _, _/ /_/ /
+//  /_____/_/ |_|\____/
 //
 
 class LRU : public PageReplacementAlgo {
@@ -199,12 +200,13 @@ class LRU : public PageReplacementAlgo {
 
         // evict the least recently used page
         if (++cur_frame > total_frame) {
+            --cur_frame;
             Node *del_node = tail->prev;
             tail->prev = del_node->prev;
             del_node->prev->next = tail;
+
             hash_table[hash_func(del_node->val)].remove(del_node);
             delete del_node;
-            --cur_frame;
         }
     }
 
@@ -228,7 +230,6 @@ int main(int argc, char *argv[])
 {
     int test_frames[4] = {64, 128, 256, 512};
     struct timeval start, end;
-
     printf("LFU policy:\nFrame\tHit\t\tMiss\t\tPage fault ratio\n");
     gettimeofday(&start, 0);
 
@@ -240,7 +241,7 @@ int main(int argc, char *argv[])
     }
 
     gettimeofday(&end, 0);
-    float elapsed_time = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
+    double elapsed_time = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
     printf("Total elapsed time: %.4f sec\n\nLRU policy:\nFrame\tHit\t\tMiss\t\tPage fault ratio\n", elapsed_time);
     gettimeofday(&start, 0);
 
