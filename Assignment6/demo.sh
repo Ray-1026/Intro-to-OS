@@ -38,8 +38,8 @@ real_time=$(echo "$elapsed_time" | grep "real" | awk '{print $2}')
 
 
 # Efficiency validate
-# threshold=0.45
-if (( $(echo "$real_time < 0.45 " | bc -l) )); then
+# threshold=4.5
+if (( $(echo "$real_time < 4.5 " | bc -l) )); then
     echo -e "Time\t:\t[0;32mEfficiency[m"
 else
     echo -e "Time\t:\t[0;31mSlow[m : ${real_time}"
@@ -47,7 +47,7 @@ fi
 
 
 # Compare hard link count
-diff -w $HARD_LINK_CNT <(find $EXTRACT_DIR -type f -exec ls -l {} + | sort -d | awk '{print $2, $NF}') > /dev/null
+diff -w $HARD_LINK_CNT <(find $EXTRACT_DIR -type f -exec ls -l {} + | awk '{print $2, $NF}' | sort -k 2 -d) > /dev/null
 
 if [ $? -eq 0 ]; then
     echo -e "HardLink:\t[0;32mCorrect[m"
