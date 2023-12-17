@@ -18,8 +18,8 @@ public GitHub repository or a public web page.
 #include <unordered_map>
 #define BUFFER_SIZE 1024 * 1024
 
-std::unordered_map<std::string, std::string> hash_table;
 int dedup_files = 0;
+std::unordered_map<std::string, std::string> hash_table;
 
 void computeSHA1andDedup(char *file)
 {
@@ -54,8 +54,8 @@ void computeSHA1andDedup(char *file)
 
 void traversal(char *input_dir)
 {
-    DIR *dir = NULL;
-    struct dirent *dp = NULL;
+    DIR *dir = nullptr;
+    struct dirent *dp = nullptr;
     struct stat st;
 
     if (stat(input_dir, &st) < 0 || !S_ISDIR(st.st_mode) || !(dir = opendir(input_dir))) {
@@ -67,10 +67,10 @@ void traversal(char *input_dir)
         if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
             continue;
 
-        char p[256];
-        strcpy(p, input_dir);
-        strcat(p, "/");
-        strcat(p, dp->d_name);
+        char p[512];
+        strncpy(p, input_dir, sizeof(p));
+        strncat(p, "/", sizeof(p));
+        strncat(p, dp->d_name, sizeof(p));
         stat(p, &st);
 
         if (S_ISDIR(st.st_mode))
@@ -84,11 +84,11 @@ void traversal(char *input_dir)
 int main(int argc, char *argv[])
 {
     struct timeval start, end;
-
     gettimeofday(&start, NULL);
-    traversal(argv[1]);
-    gettimeofday(&end, NULL);
 
+    traversal(argv[1]);
+
+    gettimeofday(&end, NULL);
     double time = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
     printf("Elapsed Time: %f s\nDedup Files: %d\n", time, dedup_files);
 }
