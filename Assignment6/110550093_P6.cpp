@@ -90,5 +90,5 @@ int main(int argc, char *argv[])
 
     gettimeofday(&end, NULL);
     double time = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
-    printf("Elapsed Time: %f s\nDedup Files: %d\n", time, dedup_files);
+    printf("Naive Elapsed : %f seconds\nDedup files : %d\n", time, dedup_files);
 }
